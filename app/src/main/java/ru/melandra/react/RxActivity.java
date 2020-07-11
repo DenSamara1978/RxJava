@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 public class RxActivity extends AppCompatActivity {
@@ -16,51 +19,36 @@ public class RxActivity extends AppCompatActivity {
     private Observable<String> observable;
     private Disposable disposable;
 
+    @BindView(R.id.rxSubscribeButton)
+    protected Button subscribeButton;
+
+    @BindView(R.id.rxUnsubscribeButton)
+    protected Button unsubscribeButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rx);
 
+        ButterKnife.bind(this);
+
         dispatcher = new Dispatcher();
         observable = dispatcher.getMessagePool();
-
-        makeButtons ();
     }
 
-    private void makeButtons () {
-        findViewById(R.id.rxSubscribeButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                observable.subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        RxActivity.this.disposable = d;
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                        Log.d("[RX]", Thread.currentThread().getName() + " received: " + s);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-                Log.d ("[RX]", "Subscribing have executed");
-            }
+    @OnClick(R.id.rxSubscribeButton)
+    protected void subscribe (View view) {
+        disposable = observable.subscribe(string -> {
+            Log.d("[RX]", Thread.currentThread().getName() + " received: " + string);
+        }, throwable -> {
+            Log.d("[RX]", Thread.currentThread().getName() + " generates error: " + throwable.getMessage());
+        }, ()-> {
+            Log.d("[RX]", Thread.currentThread().getName() + " completed.");
         });
+    }
 
-        findViewById(R.id.rxUnsubsribeButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                disposable.dispose();
-            }
-        });
+    @OnClick(R.id.rxUnsubscribeButton)
+    protected void unsubscribe (View view) {
+        disposable.dispose();
     }
 }

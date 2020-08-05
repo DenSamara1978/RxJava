@@ -14,19 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DI.Dagger.DaggerActivity">
+        <activity android:name=".Test.TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".DI.Di.DiActivity">
+        <activity android:name=".DI.Dagger.DaggerActivity">
         </activity>
-        <activity android:name=".DI.NoDi.NoDiActivity">
-        </activity>
-        <activity android:name=".Room.RoomActivity"></activity>
+        <activity android:name=".DI.Di.DiActivity"></activity>
+        <activity android:name=".DI.NoDi.NoDiActivity"></activity>
+        <activity android:name=".Room.RoomActivity" />
         <activity android:name=".Retrofit.RetrofitActivity" />
         <activity android:name=".GsonActivity" />
         <activity android:name=".RxSingleActivity" />
